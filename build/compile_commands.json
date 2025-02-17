@@ -1,45 +1,45 @@
 [
 {
   "directory": "/home/santiago/projects/rendering-engine/build",
-  "command": "/usr/bin/cc  -I/home/santiago/projects/rendering-engine/include -I/home/santiago/projects/rendering-engine/stb -I/home/santiago/projects/rendering-engine/glfw/include -I/home/santiago/projects/rendering-engine/glad/include  -o CMakeFiles/render.dir/src/main.c.o -c /home/santiago/projects/rendering-engine/src/main.c",
+  "command": "/usr/bin/cc  -I/home/santiago/projects/rendering-engine/stb -I/home/santiago/projects/rendering-engine/include -I/home/santiago/projects/rendering-engine/glfw/include -I/home/santiago/projects/rendering-engine/glad/include  -o CMakeFiles/render.dir/src/main.c.o -c /home/santiago/projects/rendering-engine/src/main.c",
   "file": "/home/santiago/projects/rendering-engine/src/main.c",
   "output": "CMakeFiles/render.dir/src/main.c.o"
 },
 {
   "directory": "/home/santiago/projects/rendering-engine/build",
-  "command": "/usr/bin/cc  -I/home/santiago/projects/rendering-engine/include -I/home/santiago/projects/rendering-engine/stb -I/home/santiago/projects/rendering-engine/glfw/include -I/home/santiago/projects/rendering-engine/glad/include  -o CMakeFiles/render.dir/src/shader.c.o -c /home/santiago/projects/rendering-engine/src/shader.c",
+  "command": "/usr/bin/cc  -I/home/santiago/projects/rendering-engine/stb -I/home/santiago/projects/rendering-engine/include -I/home/santiago/projects/rendering-engine/glfw/include -I/home/santiago/projects/rendering-engine/glad/include  -o CMakeFiles/render.dir/src/shader.c.o -c /home/santiago/projects/rendering-engine/src/shader.c",
   "file": "/home/santiago/projects/rendering-engine/src/shader.c",
   "output": "CMakeFiles/render.dir/src/shader.c.o"
 },
 {
   "directory": "/home/santiago/projects/rendering-engine/build",
-  "command": "/usr/bin/cc  -I/home/santiago/projects/rendering-engine/include -I/home/santiago/projects/rendering-engine/stb -I/home/santiago/projects/rendering-engine/glfw/include -I/home/santiago/projects/rendering-engine/glad/include  -o CMakeFiles/render.dir/src/VAO.c.o -c /home/santiago/projects/rendering-engine/src/VAO.c",
+  "command": "/usr/bin/cc  -I/home/santiago/projects/rendering-engine/stb -I/home/santiago/projects/rendering-engine/include -I/home/santiago/projects/rendering-engine/glfw/include -I/home/santiago/projects/rendering-engine/glad/include  -o CMakeFiles/render.dir/src/VAO.c.o -c /home/santiago/projects/rendering-engine/src/VAO.c",
   "file": "/home/santiago/projects/rendering-engine/src/VAO.c",
   "output": "CMakeFiles/render.dir/src/VAO.c.o"
 },
 {
   "directory": "/home/santiago/projects/rendering-engine/build",
-  "command": "/usr/bin/cc  -I/home/santiago/projects/rendering-engine/include -I/home/santiago/projects/rendering-engine/stb -I/home/santiago/projects/rendering-engine/glfw/include -I/home/santiago/projects/rendering-engine/glad/include  -o CMakeFiles/render.dir/src/VBO.c.o -c /home/santiago/projects/rendering-engine/src/VBO.c",
+  "command": "/usr/bin/cc  -I/home/santiago/projects/rendering-engine/stb -I/home/santiago/projects/rendering-engine/include -I/home/santiago/projects/rendering-engine/glfw/include -I/home/santiago/projects/rendering-engine/glad/include  -o CMakeFiles/render.dir/src/VBO.c.o -c /home/santiago/projects/rendering-engine/src/VBO.c",
   "file": "/home/santiago/projects/rendering-engine/src/VBO.c",
   "output": "CMakeFiles/render.dir/src/VBO.c.o"
 },
 {
   "directory": "/home/santiago/projects/rendering-engine/build",
-  "command": "/usr/bin/cc  -I/home/santiago/projects/rendering-engine/include -I/home/santiago/projects/rendering-engine/stb -I/home/santiago/projects/rendering-engine/glfw/include -I/home/santiago/projects/rendering-engine/glad/include  -o CMakeFiles/render.dir/src/EBO.c.o -c /home/santiago/projects/rendering-engine/src/EBO.c",
+  "command": "/usr/bin/cc  -I/home/santiago/projects/rendering-engine/stb -I/home/santiago/projects/rendering-engine/include -I/home/santiago/projects/rendering-engine/glfw/include -I/home/santiago/projects/rendering-engine/glad/include  -o CMakeFiles/render.dir/src/EBO.c.o -c /home/santiago/projects/rendering-engine/src/EBO.c",
   "file": "/home/santiago/projects/rendering-engine/src/EBO.c",
   "output": "CMakeFiles/render.dir/src/EBO.c.o"
 },
 {
   "directory": "/home/santiago/projects/rendering-engine/build",
-  "command": "/usr/bin/cc  -I/home/santiago/projects/rendering-engine/include -I/home/santiago/projects/rendering-engine/stb -I/home/santiago/projects/rendering-engine/glfw/include -I/home/santiago/projects/rendering-engine/glad/include  -o CMakeFiles/render.dir/src/stb.c.o -c /home/santiago/projects/rendering-engine/src/stb.c",
-  "file": "/home/santiago/projects/rendering-engine/src/stb.c",
-  "output": "CMakeFiles/render.dir/src/stb.c.o"
+  "command": "/usr/bin/cc  -I/home/santiago/projects/rendering-engine/stb -I/home/santiago/projects/rendering-engine/include -I/home/santiago/projects/rendering-engine/glfw/include -I/home/santiago/projects/rendering-engine/glad/include  -o CMakeFiles/render.dir/src/texture.c.o -c /home/santiago/projects/rendering-engine/src/texture.c",
+  "file": "/home/santiago/projects/rendering-engine/src/texture.c",
+  "output": "CMakeFiles/render.dir/src/texture.c.o"
 },
 {
   "directory": "/home/santiago/projects/rendering-engine/build",
-  "command": "/usr/bin/cc  -I/home/santiago/projects/rendering-engine/include -I/home/santiago/projects/rendering-engine/stb -I/home/santiago/projects/rendering-engine/glfw/include -I/home/santiago/projects/rendering-engine/glad/include  -o CMakeFiles/render.dir/src/texture.c.o -c /home/santiago/projects/rendering-engine/src/texture.c",
-  "file": "/home/santiago/projects/rendering-engine/src/texture.c",
-  "output": "CMakeFiles/render.dir/src/texture.c.o"
+  "command": "/usr/bin/cc  -I/home/santiago/projects/rendering-engine/stb -I/home/santiago/projects/rendering-engine/include -I/home/santiago/projects/rendering-engine/glfw/include -I/home/santiago/projects/rendering-engine/glad/include  -o CMakeFiles/render.dir/src/stb.c.o -c /home/santiago/projects/rendering-engine/src/stb.c",
+  "file": "/home/santiago/projects/rendering-engine/src/stb.c",
+  "output": "CMakeFiles/render.dir/src/stb.c.o"
 },
 {
   "directory": "/home/santiago/projects/rendering-engine/build/glfw/src",

@@ -190,6 +190,8 @@ render: CMakeFiles/render.dir/src/stb.c.o
 render: CMakeFiles/render.dir/build.make
 render: glfw/src/libglfw3.a
 render: glad/libglad.a
+render: /usr/lib/x86_64-linux-gnu/libgsl.so
+render: /usr/lib/x86_64-linux-gnu/libgslcblas.so
 render: /usr/lib/x86_64-linux-gnu/librt.a
 render: /usr/lib/x86_64-linux-gnu/libm.so
 render: CMakeFiles/render.dir/link.txt

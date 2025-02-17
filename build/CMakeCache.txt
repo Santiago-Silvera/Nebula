@@ -330,6 +330,26 @@ GLFW_LIBRARY_TYPE:STRING=
 //Value Computed by CMake
 GLFW_SOURCE_DIR:STATIC=/home/santiago/projects/rendering-engine/glfw
 
+//Path to a library.
+GSL_CBLAS_LIBRARY:FILEPATH=/usr/lib/x86_64-linux-gnu/libgslcblas.so
+
+//Path to a library.
+GSL_CBLAS_LIBRARY_DEBUG:FILEPATH=/usr/lib/x86_64-linux-gnu/libgslcblas.so
+
+//Path to a program.
+GSL_CONFIG_EXECUTABLE:FILEPATH=GSL_CONFIG_EXECUTABLE-NOTFOUND
+
+//Path to a file.
+GSL_INCLUDE_DIR:PATH=/usr/include
+
+//Path to a library.
+GSL_LIBRARY:FILEPATH=/usr/lib/x86_64-linux-gnu/libgsl.so
+
+//Path to a library.
+GSL_LIBRARY_DEBUG:FILEPATH=/usr/lib/x86_64-linux-gnu/libgsl.so
+
+GSL_ROOT_DIR:STRING=/usr
+
 //Value Computed by CMake
 Glad_BINARY_DIR:STATIC=/home/santiago/projects/rendering-engine/build/glad
 
@@ -766,6 +786,15 @@ X11_xkbfile_INCLUDE_PATH:PATH=/usr/include
 X11_xkbfile_LIB:FILEPATH=/usr/lib/x86_64-linux-gnu/libxkbfile.so
 
 //Path to a library.
+pkgcfg_lib_GSL_gsl:FILEPATH=/usr/lib/x86_64-linux-gnu/libgsl.so
+
+//Path to a library.
+pkgcfg_lib_GSL_gslcblas:FILEPATH=/usr/lib/x86_64-linux-gnu/libgslcblas.so
+
+//Path to a library.
+pkgcfg_lib_GSL_m:FILEPATH=/usr/lib/x86_64-linux-gnu/libm.so
+
+//Path to a library.
 pkgcfg_lib_PKG_FONTCONFIG_fontconfig:FILEPATH=/usr/lib/x86_64-linux-gnu/libfontconfig.so
 
 //Path to a library.
@@ -977,6 +1006,8 @@ CMAKE_TAPI-ADVANCED:INTERNAL=1
 CMAKE_UNAME:INTERNAL=/usr/bin/uname
 //ADVANCED property for variable: CMAKE_VERBOSE_MAKEFILE
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
+//Details about finding GSL
+FIND_PACKAGE_MESSAGE_DETAILS_GSL:INTERNAL=[/usr/include][/usr/lib/x86_64-linux-gnu/libgsl.so][/usr/lib/x86_64-linux-gnu/libgslcblas.so][v2.7.1()]
 //Details about finding PkgConfig
 FIND_PACKAGE_MESSAGE_DETAILS_PkgConfig:INTERNAL=[/usr/bin/pkg-config][v1.8.1()]
 //Details about finding Threads
@@ -999,6 +1030,55 @@ Fontconfig_LIBRARY-ADVANCED:INTERNAL=1
 GLFW_PKG_CONFIG_LIBS_PRIVATE:INTERNAL= -lrt -lm -ldl
 //GLFW pkg-config Requires.private
 GLFW_PKG_CONFIG_REQUIRES_PRIVATE:INTERNAL=
+//ADVANCED property for variable: GSL_CBLAS_LIBRARY
+GSL_CBLAS_LIBRARY-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: GSL_CBLAS_LIBRARY_DEBUG
+GSL_CBLAS_LIBRARY_DEBUG-ADVANCED:INTERNAL=1
+GSL_CFLAGS:INTERNAL=-I/usr/include
+GSL_CFLAGS_I:INTERNAL=
+GSL_CFLAGS_OTHER:INTERNAL=
+GSL_FOUND:INTERNAL=1
+GSL_INCLUDEDIR:INTERNAL=/usr/include
+//ADVANCED property for variable: GSL_INCLUDE_DIR
+GSL_INCLUDE_DIR-ADVANCED:INTERNAL=1
+GSL_INCLUDE_DIRS:INTERNAL=/usr/include
+GSL_LDFLAGS:INTERNAL=-L/usr/lib/x86_64-linux-gnu;-lgsl;-lgslcblas;-lm
+GSL_LDFLAGS_OTHER:INTERNAL=
+GSL_LIBDIR:INTERNAL=/usr/lib/x86_64-linux-gnu
+GSL_LIBRARIES:INTERNAL=gsl;gslcblas;m
+//ADVANCED property for variable: GSL_LIBRARY
+GSL_LIBRARY-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: GSL_LIBRARY_DEBUG
+GSL_LIBRARY_DEBUG-ADVANCED:INTERNAL=1
+GSL_LIBRARY_DIRS:INTERNAL=/usr/lib/x86_64-linux-gnu
+GSL_LIBS:INTERNAL=
+GSL_LIBS_L:INTERNAL=
+GSL_LIBS_OTHER:INTERNAL=
+GSL_LIBS_PATHS:INTERNAL=
+GSL_MODULE_NAME:INTERNAL=gsl
+GSL_PREFIX:INTERNAL=/usr
+//ADVANCED property for variable: GSL_ROOT_DIR
+GSL_ROOT_DIR-ADVANCED:INTERNAL=1
+GSL_STATIC_CFLAGS:INTERNAL=-I/usr/include
+GSL_STATIC_CFLAGS_I:INTERNAL=
+GSL_STATIC_CFLAGS_OTHER:INTERNAL=
+GSL_STATIC_INCLUDE_DIRS:INTERNAL=/usr/include
+GSL_STATIC_LDFLAGS:INTERNAL=-L/usr/lib/x86_64-linux-gnu;-lgsl;-lgslcblas;-lm
+GSL_STATIC_LDFLAGS_OTHER:INTERNAL=
+GSL_STATIC_LIBDIR:INTERNAL=
+GSL_STATIC_LIBRARIES:INTERNAL=gsl;gslcblas;m
+GSL_STATIC_LIBRARY_DIRS:INTERNAL=/usr/lib/x86_64-linux-gnu
+GSL_STATIC_LIBS:INTERNAL=
+GSL_STATIC_LIBS_L:INTERNAL=
+GSL_STATIC_LIBS_OTHER:INTERNAL=
+GSL_STATIC_LIBS_PATHS:INTERNAL=
+//ADVANCED property for variable: GSL_VERSION
+GSL_VERSION-ADVANCED:INTERNAL=1
+GSL_VERSION:INTERNAL=2.7.1
+GSL_gsl_INCLUDEDIR:INTERNAL=
+GSL_gsl_LIBDIR:INTERNAL=
+GSL_gsl_PREFIX:INTERNAL=
+GSL_gsl_VERSION:INTERNAL=
 //Have function memfd_create
 HAVE_MEMFD_CREATE:INTERNAL=1
 //ADVANCED property for variable: MATH_LIBRARY
@@ -1367,10 +1447,18 @@ X11_xkbfile_LIB-ADVANCED:INTERNAL=1
 _CMAKE_LINKER_PUSHPOP_STATE_SUPPORTED:INTERNAL=TRUE
 //CMAKE_INSTALL_PREFIX during last run
 _GNUInstallDirs_LAST_CMAKE_INSTALL_PREFIX:INTERNAL=/usr/local
+__pkg_config_arguments_GSL:INTERNAL=QUIET;gsl
 __pkg_config_arguments_PKG_FONTCONFIG:INTERNAL=QUIET;fontconfig
 __pkg_config_arguments_Wayland:INTERNAL=REQUIRED;wayland-client>=0.2.7;wayland-cursor>=0.2.7;wayland-egl>=0.2.7;xkbcommon>=0.5.0
+__pkg_config_checked_GSL:INTERNAL=1
 __pkg_config_checked_PKG_FONTCONFIG:INTERNAL=1
 __pkg_config_checked_Wayland:INTERNAL=1
+//ADVANCED property for variable: pkgcfg_lib_GSL_gsl
+pkgcfg_lib_GSL_gsl-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: pkgcfg_lib_GSL_gslcblas
+pkgcfg_lib_GSL_gslcblas-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: pkgcfg_lib_GSL_m
+pkgcfg_lib_GSL_m-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: pkgcfg_lib_PKG_FONTCONFIG_fontconfig
 pkgcfg_lib_PKG_FONTCONFIG_fontconfig-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: pkgcfg_lib_PKG_FONTCONFIG_freetype

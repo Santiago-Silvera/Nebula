@@ -39,6 +39,7 @@ set(CMAKE_MAKEFILE_DEPENDS
   "/usr/share/cmake-3.28/Modules/Compiler/GNU.cmake"
   "/usr/share/cmake-3.28/Modules/FindFontconfig.cmake"
   "/usr/share/cmake-3.28/Modules/FindFreetype.cmake"
+  "/usr/share/cmake-3.28/Modules/FindGSL.cmake"
   "/usr/share/cmake-3.28/Modules/FindPackageHandleStandardArgs.cmake"
   "/usr/share/cmake-3.28/Modules/FindPackageMessage.cmake"
   "/usr/share/cmake-3.28/Modules/FindPkgConfig.cmake"
