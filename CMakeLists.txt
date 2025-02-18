@@ -21,12 +21,14 @@ set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 
-add_subdirectory(glfw)
+add_subdirectory(external/glfw EXCLUDE_FROM_ALL)
 
-add_subdirectory(glad/)
+add_subdirectory(external/glad EXCLUDE_FROM_ALL)
 
-target_link_libraries(render glfw glad GSL::gsl GSL::gslcblas)
+add_subdirectory(external/cglm EXCLUDE_FROM_ALL)
 
-target_include_directories(render PUBLIC "${PROJECT_SOURCE_DIR}/stb")
+target_link_libraries(render PRIVATE glfw glad cglm_headers)
+
+target_include_directories(render PUBLIC "${PROJECT_SOURCE_DIR}/external/stb")
 target_include_directories(render PUBLIC "${PROJECT_SOURCE_DIR}/include")
 
