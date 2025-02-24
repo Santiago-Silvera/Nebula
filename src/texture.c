@@ -10,7 +10,7 @@ texture_t create_texture(const char *image, GLenum textureType, GLenum slot,
   int widthImg, heightImg, numColCh;
   // flip vertically
   stbi_set_flip_vertically_on_load(true);
-  unsigned char *bytes = stbi_load(image, &widthImg, &heightImg, &numColCh, 4);
+  unsigned char *bytes = stbi_load(image, &widthImg, &heightImg, &numColCh, 0);
   if (!bytes) {
     perror("Failed to load texture\n");
   }
