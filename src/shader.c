@@ -4,10 +4,10 @@
 
 // ChatGPT gave me this
 const char *get_file_contents(const char *filename) {
-  printf("Opening file %s", filename);
+  printf("Opening file %s\n", filename);
   FILE *file = fopen(filename, "r");
   if (!file) {
-    perror("Failed to open file %s\n");
+    perror("Failed to open file\n");
     return NULL;
   }
 
@@ -19,7 +19,7 @@ const char *get_file_contents(const char *filename) {
   // Allocate memory (+1 for null terminator)
   char *buffer = (char *)malloc(file_size + 1);
   if (!buffer) {
-    perror("Memory allocation failed");
+    perror("Memory allocation failed\n");
     fclose(file);
     return NULL;
   }

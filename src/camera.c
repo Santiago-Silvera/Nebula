@@ -28,7 +28,7 @@ void camera_matrix(camera_t *cam, float FOVdeg, float near_plane,
                    float far_plane, SHADER_ID shader, const char *uniform) {
   mat4 view, projection;
 
-  vec3 target = {};
+  vec3 target;
   glm_vec3_add(cam->position, cam->orientation, target);
 
   // ---Debug------------------------
@@ -95,34 +95,34 @@ void inputs(GLFWwindow *window, camera_t *cam) {
   }
   glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-  /*
   double mouseX, mouseY;
   glfwGetCursorPos(window, &mouseX, &mouseY);
 
   float centerX = (cam->width / 2.0f);
   float centerY = (cam->height / 2.0f);
 
-  float rotX = cam->sensitivity * (float)(mouseY - centerX);
-  float rotY = cam->sensitivity * (float)(mouseX - centerY);
-
-  glfwSetCursorPos(window, centerX, centerY);
-
-  vec3 newOrientation;
-  glm_vec3_copy(cam->orientation, newOrientation);
-
-  vec3 rotAxis;
-  glm_vec3_cross(cam->up, cam->orientation, rotAxis);
-  glm_vec3_norm(rotAxis);
-  glm_vec3_rotate(newOrientation, glm_rad(-rotX), rotAxis);
-
-  vec3 down;
-  glm_vec3_negate_to(cam->up, down);
-
-  if (!((glm_vec3_angle(newOrientation, cam->up) <= glm_rad(5.0f)) ||
-        (glm_vec3_angle(newOrientation, down) <= glm_rad(5.0f)))) {
-    glm_vec3_copy(newOrientation, cam->orientation);
+  // First mouse movement initialization
+  static bool firstMouse = true;
+  if (firstMouse) {
+      mouseX = centerX;
+      mouseY = centerY;
+      firstMouse = false;
   }
 
-  glm_vec3_rotate(cam->orientation, glm_rad(-rotY), cam->up);
-  */
+  // Calculate mouse offset
+  float offsetX = ((float)mouseX - centerX) * cam->sensitivity * 0.1f;
+  float offsetY = ((float)mouseY - centerY) * cam->sensitivity * 0.1f; // Inverted Y
+
+  // Reset cursor to center
+  glfwSetCursorPos(window, centerX, centerY);
+
+  // Calculate right vector
+  vec3 right;
+  glm_vec3_cross(cam->orientation, cam->up, right);
+  glm_vec3_norm(right);
+
+  // Apply rotation to orientation vector
+  glm_vec3_rotate(cam->orientation, glm_rad(-offsetX), cam->up);
+  glm_vec3_rotate(cam->orientation, glm_rad(-offsetY), right);
+  glm_vec3_norm(cam->orientation);
 }

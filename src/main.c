@@ -98,7 +98,7 @@ int main() {
 
   glEnable(GL_DEPTH_TEST);
   vec3 camPos = {0.0f, 0.0f, 1.0f};
-  camera_t cam = create_camera(camPos, SCR_WIDTH, SCR_HEIGHT, 0.01f, 0.1f);
+  camera_t cam = create_camera(camPos, SCR_WIDTH, SCR_HEIGHT, 0.01f, 1.f);
 
   while (!glfwWindowShouldClose(window)) {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
