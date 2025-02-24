@@ -1,8 +1,9 @@
 // glad needs to be imported BEFORE GLFW
 #include <glad/glad.h>
 
-#include <GLFW/glfw3.h>
-#include <cglm/cglm.h>
+#include "GLFW/glfw3.h"
+#include "camera.h"
+
 #include <stb_image.h>
 #include <stdio.h>
 #include <time.h>
@@ -10,11 +11,11 @@
 #include "EBO.h"
 #include "VAO.h"
 #include "VBO.h"
-#include "cglm/mat4.h"
 #include "shader.h"
 #include "texture.h"
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
+void error_callback(int error, const char *desc);
 
 GLfloat vertices[] =
     { //     COORDINATES     /        COLORS      /   TexCoord  //
@@ -26,14 +27,19 @@ GLfloat vertices[] =
 // Indices for vertices order
 GLuint indices[] = {0, 1, 2, 0, 2, 3, 0, 1, 4, 1, 2, 4, 2, 3, 4, 3, 0, 4};
 
+const int SCR_WIDTH = 800;
+const int SCR_HEIGHT = 600;
+
 int main() {
   // Init the window
+  printf("Initializing rendering engine\n\n\n");
   glfwInit();
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-  GLFWwindow *window = glfwCreateWindow(800, 600, "LearnOpenGL", NULL, NULL);
+  GLFWwindow *window =
+      glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
   if (window == NULL) {
     printf("Failed to create GLFW window\n");
     glfwTerminate();
@@ -41,7 +47,18 @@ int main() {
   }
 
   glfwMakeContextCurrent(window);
+  glfwFocusWindow(window);
+  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
   glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+  glfwSetErrorCallback(error_callback);
+
+  // Check if GLFW_CURSOR_DISABLED is properly set
+  int mode = glfwGetInputMode(window, GLFW_CURSOR);
+  if (mode == GLFW_CURSOR_DISABLED) {
+    printf("GLFW_CURSOR_DISABLED successfully set.\n");
+  } else {
+    printf("Failed to set GLFW_CURSOR_DISABLED, current mode: %d\n", mode);
+  }
 
   if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
     printf("Failed to initialize GLAD\n");
@@ -50,9 +67,8 @@ int main() {
 
   // Create a shader program
   // TODO: Find a better way of finding the path
-  SHADER_ID shader = create_shader_program(
-      "/home/santiago/projects/rendering-engine/shaders/default.vert",
-      "/home/santiago/projects/rendering-engine/shaders/default.frag");
+  SHADER_ID shader =
+      create_shader_program("shaders/default.vert", "shaders/default.frag");
 
   // Create a VAO and bind it
   VAO_ID VAO = create_VAO();
@@ -76,14 +92,13 @@ int main() {
 
   // Texture
 
-  texture_t texture = create_texture(
-      "/home/santiago/projects/rendering-engine/resources/brick.png",
-      GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+  texture_t texture = create_texture("resources/brick.png", GL_TEXTURE_2D,
+                                     GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
   assign_texUnit(&shader, "tex0", 0);
 
-  mat4 model, view, projection;
-
   glEnable(GL_DEPTH_TEST);
+  vec3 camPos = {0.0f, 0.0f, 1.0f};
+  camera_t cam = create_camera(camPos, SCR_WIDTH, SCR_HEIGHT, 0.01f, 0.1f);
 
   while (!glfwWindowShouldClose(window)) {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -91,27 +106,10 @@ int main() {
 
     activate_shader(&shader);
 
+    inputs(window, &cam);
+    camera_matrix(&cam, 45.0f, 0.1f, 100.0f, shader, "camMatrix");
+
     bind_texture(&texture);
-
-    glm_mat4_identity(model);
-    float timeValue = (float)glfwGetTime();
-
-    glm_rotate(model, glm_rad(timeValue * 50.0f), (vec3){0.0f, 1.0f, 0.0f});
-
-    vec3 camPos = {0.0f, 1.5f, 2.0f};
-    vec3 camTarget = {0.0f, 0.0f, 0.0f};
-    vec3 camUp = {0.0f, 1.0f, 0.0f};
-
-    glm_perspective(glm_rad(45.0f), 800.0f / 600.0f, 0.1f, 100.0f, projection);
-
-    glm_lookat(camPos, camTarget, camUp, view);
-
-    glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_FALSE,
-                       (const GLfloat *)model);
-    glUniformMatrix4fv(glGetUniformLocation(shader, "view"), 1, GL_FALSE,
-                       (const GLfloat *)view);
-    glUniformMatrix4fv(glGetUniformLocation(shader, "projection"), 1, GL_FALSE,
-                       (const GLfloat *)projection);
 
     bind_VAO(&VAO);
     glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(typeof(indices[0])),
@@ -133,4 +131,7 @@ int main() {
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
   glViewport(0, 0, width, height);
+}
+void error_callback(int error, const char *desc) {
+  fprintf(stderr, "GLFW Error (%d): %s\n", error, desc);
 }

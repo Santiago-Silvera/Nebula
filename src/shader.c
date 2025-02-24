@@ -4,9 +4,10 @@
 
 // ChatGPT gave me this
 const char *get_file_contents(const char *filename) {
+  printf("Opening file %s", filename);
   FILE *file = fopen(filename, "r");
   if (!file) {
-    perror("Failed to open file");
+    perror("Failed to open file %s\n");
     return NULL;
   }
 

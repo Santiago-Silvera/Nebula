@@ -5,8 +5,6 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(SRC_DIR ${PROJECT_SOURCE_DIR}/src)
 
-find_package(GSL REQUIRED)
-
 add_executable(render
     ${SRC_DIR}/main.c
     ${SRC_DIR}/shader.c
@@ -15,6 +13,7 @@ add_executable(render
     ${SRC_DIR}/EBO.c
     ${SRC_DIR}/texture.c
     ${SRC_DIR}/stb.c
+    ${SRC_DIR}/camera.c
 )
 
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
