@@ -4,8 +4,7 @@
 #include "cglm/io.h"
 #include "cglm/vec3.h"
 
-camera_t create_camera(vec3 position, int width, int height, float speed,
-                       float sensitivity) {
+camera_t create_camera(vec3 position, int width, int height, float speed, float sensitivity) {
   vec3 final_position;
   if (position) {
     glm_vec3_copy(position, final_position); // Copy the provided position
@@ -20,12 +19,12 @@ camera_t create_camera(vec3 position, int width, int height, float speed,
       .height = height,
       .speed = speed,
       .sensitivity = sensitivity,
+      .matrix = GLM_MAT4_IDENTITY_INIT,
   };
   return cam;
 }
 
-void camera_matrix(camera_t *cam, float FOVdeg, float near_plane,
-                   float far_plane, SHADER_ID shader, const char *uniform) {
+void update_camera_matrix(camera_t *cam, float FOVdeg, float near_plane, float far_plane) {
   mat4 view, projection;
 
   vec3 target;
@@ -41,13 +40,14 @@ void camera_matrix(camera_t *cam, float FOVdeg, float near_plane,
   // --------------------------------
 
   glm_lookat(cam->position, target, cam->up, view);
-  glm_perspective(glm_rad(FOVdeg), (float)cam->width / cam->height, near_plane,
-                  far_plane, projection);
+  glm_perspective(glm_rad(FOVdeg), (float)cam->width / cam->height, near_plane, far_plane, projection);
 
-  mat4 m = GLM_MAT4_IDENTITY_INIT;
-  glm_mat4_mul(projection, view, m);
-  glUniformMatrix4fv(glGetUniformLocation(shader, uniform), 1, GL_FALSE,
-                     (float *)m);
+  glm_mat4_mul(projection, view, cam->matrix);
+
+}
+
+void apply_camera_matrix(SHADER_ID shader, const char* uniform, mat4 *m) {
+  glUniformMatrix4fv(glGetUniformLocation(shader, uniform), 1, GL_FALSE, (float *)m);
 }
 
 void inputs(GLFWwindow *window, camera_t *cam) {
@@ -86,6 +86,12 @@ void inputs(GLFWwindow *window, camera_t *cam) {
     vec3 direction;
     glm_vec3_scale(cam->up, cam->speed, direction);
     glm_vec3_sub(cam->position, direction, cam->position);
+  }  
+  if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
+    cam->speed = 0.05f;
+  }
+  if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE) {
+    cam->speed = 0.01f;
   }
 
   // MOUSE INPUT -------------------------------------
@@ -122,7 +128,14 @@ void inputs(GLFWwindow *window, camera_t *cam) {
   glm_vec3_norm(right);
 
   // Apply rotation to orientation vector
-  glm_vec3_rotate(cam->orientation, glm_rad(-offsetX), cam->up);
+  vec3 newOrientation;
+  glm_vec3_copy(cam->orientation, newOrientation);
+  glm_vec3_rotate(newOrientation, glm_rad(-offsetX), cam->up);
+  vec3 down;
+  glm_vec3_negate_to(cam->up, down);
+  if (abs(glm_vec3_angle(newOrientation, cam->up) - glm_rad(90.0f)) <= glm_rad(85.0f)) {
+    glm_vec3_copy(newOrientation, cam->orientation);
+  }
   glm_vec3_rotate(cam->orientation, glm_rad(-offsetY), right);
   glm_vec3_norm(cam->orientation);
 }

@@ -17,15 +17,45 @@
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void error_callback(int error, const char *desc);
 
-GLfloat vertices[] =
-    { //     COORDINATES     /        COLORS      /   TexCoord  //
-        -0.5f, 0.0f,  0.5f,  0.83f, 0.70f, 0.44f, 0.0f,  0.0f,  -0.5f, 0.0f,
-        -0.5f, 0.83f, 0.70f, 0.44f, 5.0f,  0.0f,  0.5f,  0.0f,  -0.5f, 0.83f,
-        0.70f, 0.44f, 0.0f,  0.0f,  0.5f,  0.0f,  0.5f,  0.83f, 0.70f, 0.44f,
-        5.0f,  0.0f,  0.0f,  0.8f,  0.0f,  0.92f, 0.86f, 0.76f, 2.5f,  5.0f};
+GLfloat vertices[] ={
+   //   COORDINATES       /        COLORS     / TexCoord    /    NORMALS   //
+   -1.0f, 0.0f,  1.0f,		0.0f, 0.0f, 0.0f,		0.0f, 0.0f,		0.0f, 1.0f, 0.0f,
+   -1.0f, 0.0f, -1.0f,		0.0f, 0.0f, 0.0f,		0.0f, 1.0f,		0.0f, 1.0f, 0.0f,
+    1.0f, 0.0f, -1.0f,		0.0f, 0.0f, 0.0f,		1.0f, 1.0f,		0.0f, 1.0f, 0.0f,
+    1.0f, 0.0f,  1.0f,		0.0f, 0.0f, 0.0f,		1.0f, 0.0f,		0.0f, 1.0f, 0.0f
+ };
 
-// Indices for vertices order
-GLuint indices[] = {0, 1, 2, 0, 2, 3, 0, 1, 4, 1, 2, 4, 2, 3, 4, 3, 0, 4};
+GLuint indices[] = {
+	0, 1, 2,
+	0, 2, 3
+};
+
+GLfloat lightVertices[] ={
+   //     COORDINATES     //
+	-0.1f, -0.1f,  0.1f,
+	-0.1f, -0.1f, -0.1f,
+	 0.1f, -0.1f, -0.1f,
+	 0.1f, -0.1f,  0.1f,
+	-0.1f,  0.1f,  0.1f,
+	-0.1f,  0.1f, -0.1f,
+	 0.1f,  0.1f, -0.1f,
+	 0.1f,  0.1f,  0.1f
+};
+
+GLuint lightIndices[] ={
+	0, 1, 2,
+	0, 2, 3,
+	0, 4, 7,
+	0, 7, 3,
+	3, 7, 6,
+	3, 6, 2,
+	2, 6, 5,
+	2, 5, 1,
+	1, 5, 4,
+	1, 4, 0,
+	4, 5, 6,
+	4, 6, 7
+};
 
 const int SCR_WIDTH = 800;
 const int SCR_HEIGHT = 600;
@@ -66,9 +96,7 @@ int main() {
   }
 
   // Create a shader program
-  // TODO: Find a better way of finding the path
-  SHADER_ID shader =
-      create_shader_program("shaders/default.vert", "shaders/default.frag");
+  SHADER_ID shader = create_shader_program("shaders/default.vert", "shaders/default.frag");
 
   // Create a VAO and bind it
   VAO_ID VAO = create_VAO();
@@ -79,21 +107,51 @@ int main() {
   EBO_ID EBO = create_EBO(indices, sizeof(indices));
 
   // Link attributes
-  link_attrib(&VAO, &VBO, 0, 3, GL_FLOAT, 8 * sizeof(float), (void *)(0));
-  link_attrib(&VAO, &VBO, 1, 3, GL_FLOAT, 8 * sizeof(float),
-              (void *)(3 * sizeof(float)));
-  link_attrib(&VAO, &VBO, 2, 2, GL_FLOAT, 8 * sizeof(float),
-              (void *)(6 * sizeof(float)));
+  link_attrib(&VAO, &VBO, 0, 3, GL_FLOAT, 11 * sizeof(float), (void *)(0));
+  link_attrib(&VAO, &VBO, 1, 3, GL_FLOAT, 11 * sizeof(float), (void *)(3 * sizeof(float)));
+  link_attrib(&VAO, &VBO, 2, 2, GL_FLOAT, 11 * sizeof(float), (void *)(6 * sizeof(float)));
+  link_attrib(&VAO, &VBO, 3, 3, GL_FLOAT, 11 * sizeof(float), (void *)(8 * sizeof(float)));
 
   // Make sure that everything is unbinded
   unbind_VAO();
   unbind_VBO();
   unbind_EBO();
 
+  SHADER_ID lightShader = create_shader_program("shaders/light.vert", "shaders/light.frag");
+  VAO_ID lightVAO = create_VAO();
+  bind_VAO(&lightVAO);
+
+  VBO_ID lightVBO = create_VBO(lightVertices, sizeof(lightVertices));
+  EBO_ID lightEBO = create_EBO(lightIndices, sizeof(lightIndices));
+
+  link_attrib(&lightVAO, &lightVBO, 0, 3, GL_FLOAT, 3 * sizeof(float), (void *)(0));
+
+  unbind_VAO();
+  unbind_VBO();
+  unbind_EBO();
+
+  vec4 lightColor = {1.0f, 1.0f, 1.0f, 1.0f};
+
+  vec3 lightPos = {0.0f, 1.5f, -1.5f};
+  mat4 lightModel = GLM_MAT4_IDENTITY_INIT;
+  glm_translate(lightModel, lightPos);
+
+  vec3 pyramidPos = {0.0f, 0.0f, -1.5f};
+  mat4 pyramidModel = GLM_MAT4_IDENTITY_INIT;
+  glm_translate(pyramidModel, pyramidPos);
+
+  activate_shader(&lightShader);
+  glUniformMatrix4fv(glGetUniformLocation(lightShader, "model"), 1, GL_FALSE, (float *)lightModel);
+  glUniform4f(glGetUniformLocation(lightShader, "lightColor"), lightColor[0], lightColor[1], lightColor[2], lightColor[3]);
+  activate_shader(&shader);
+  glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_FALSE, (float *)pyramidModel);
+  glUniform4f(glGetUniformLocation(shader, "lightColor"), lightColor[0], lightColor[1], lightColor[2], lightColor[3]);
+  glUniform3f(glGetUniformLocation(shader, "lightPos"), lightPos[0], lightPos[1], lightPos[2]);
+
+
   // Texture
 
-  texture_t texture = create_texture("resources/brick.png", GL_TEXTURE_2D,
-                                     GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+  texture_t texture = create_texture("resources/planks.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
   assign_texUnit(&shader, "tex0", 0);
 
   glEnable(GL_DEPTH_TEST);
@@ -103,18 +161,26 @@ int main() {
   while (!glfwWindowShouldClose(window)) {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    inputs(window, &cam);
+    update_camera_matrix(&cam, 45.0f, 0.1f, 100.0f);
 
     activate_shader(&shader);
 
-    inputs(window, &cam);
-    camera_matrix(&cam, 45.0f, 0.1f, 100.0f, shader, "camMatrix");
+    glUniform3f(glGetUniformLocation(shader, "camPos"), cam.position[0], cam.position[1], cam.position[2]);
+
+    apply_camera_matrix(shader, "camMatrix", &(cam.matrix));
 
     bind_texture(&texture);
 
     bind_VAO(&VAO);
-    glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(typeof(indices[0])),
-                   GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(typeof(indices[0])), GL_UNSIGNED_INT, 0);
+    unbind_texture();
 
+    activate_shader(&lightShader);
+    apply_camera_matrix(lightShader, "camMatrix", &(cam.matrix));
+    bind_VAO(&lightVAO);
+    glDrawElements(GL_TRIANGLES, sizeof(lightIndices) / sizeof(typeof(lightIndices[0])), GL_UNSIGNED_INT, 0);
+    
     glfwSwapBuffers(window);
     glfwPollEvents();
   }

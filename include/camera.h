@@ -14,12 +14,12 @@ typedef struct Camera {
   int height;
   float speed;
   float sensitivity;
+  mat4 matrix;
 } camera_t;
 
-camera_t create_camera(vec3 position, int width, int height, float speed,
-                       float sensitivity);
-void camera_matrix(camera_t *cam, float FOVdeg, float near_plane,
-                   float far_plane, SHADER_ID shader, const char *uniform);
+camera_t create_camera(vec3 position, int width, int height, float speed, float sensitivity);
+void update_camera_matrix(camera_t *cam, float FOVdeg, float near_plane, float far_plane);
+void apply_camera_matrix(SHADER_ID shader, const char* uniform, mat4 *m);
 
 void inputs(GLFWwindow *window, camera_t *cam);
 

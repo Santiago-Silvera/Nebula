@@ -4,8 +4,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-texture_t create_texture(const char *image, GLenum textureType, GLenum slot,
-                         GLenum format, GLenum pixelType) {
+texture_t create_texture(const char *image, GLenum textureType, GLenum slot, GLenum format, GLenum pixelType) {
   texture_t texture = {.type = textureType};
   int widthImg, heightImg, numColCh;
   // flip vertically
@@ -23,7 +22,8 @@ texture_t create_texture(const char *image, GLenum textureType, GLenum slot,
   // Docs: selects which texture unit subsequent texture
   // state calls will affect. Basically, textures come in
   // bundles and we select which texture unit to use
-  glActiveTexture(slot);
+  glActiveTexture(GL_TEXTURE0 + slot);
+  texture.slot = slot;
 
   glBindTexture(textureType, texture.textureID);
 
@@ -53,6 +53,7 @@ void assign_texUnit(SHADER_ID *shader, const char *uniform, GLuint texUnit) {
   glUniform1i(tex0uniform, texUnit);
 }
 void bind_texture(texture_t *texture) {
+  glActiveTexture(GL_TEXTURE0 + texture->slot);
   glBindTexture(GL_TEXTURE_2D, texture->textureID);
 }
 void unbind_texture(void) { glBindTexture(GL_TEXTURE_2D, 0); }

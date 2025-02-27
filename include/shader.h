@@ -3,6 +3,8 @@
 
 #include <glad/glad.h>
 
+#include <GLFW/glfw3.h>
+
 // Shader program ID
 typedef GLuint SHADER_ID;
 
