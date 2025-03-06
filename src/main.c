@@ -1,28 +1,18 @@
-// glad needs to be imported BEFORE GLFW
-#include <glad/glad.h>
-
-#include "GLFW/glfw3.h"
-#include "camera.h"
-
-#include <stb_image.h>
 #include <stdio.h>
+#include <cglm/cglm.h>
 #include <time.h>
 
-#include "EBO.h"
-#include "VAO.h"
-#include "VBO.h"
-#include "shader.h"
-#include "texture.h"
+#include "mesh.h"
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void error_callback(int error, const char *desc);
 
-GLfloat vertices[] ={
-   //   COORDINATES       /        COLORS     / TexCoord    /    NORMALS   //
-   -1.0f, 0.0f,  1.0f,		0.0f, 0.0f, 0.0f,		0.0f, 0.0f,		0.0f, 1.0f, 0.0f,
-   -1.0f, 0.0f, -1.0f,		0.0f, 0.0f, 0.0f,		0.0f, 1.0f,		0.0f, 1.0f, 0.0f,
-    1.0f, 0.0f, -1.0f,		0.0f, 0.0f, 0.0f,		1.0f, 1.0f,		0.0f, 1.0f, 0.0f,
-    1.0f, 0.0f,  1.0f,		0.0f, 0.0f, 0.0f,		1.0f, 0.0f,		0.0f, 1.0f, 0.0f
+vertex_t vertices[] ={
+   //   COORDINATES    /       COLORS       /     NORMALS       /  TEXCOORD   //
+   {{-1.0f, 0.0f,  1.0f},	  {0.0f, 0.0f, 0.0f},		{0.0f, 1.0f, 0.0f},   {0.0f, 0.0f}},	
+   {{-1.0f, 0.0f, -1.0f},		{0.0f, 0.0f, 0.0f},		{0.0f, 1.0f, 0.0f},   {0.0f, 1.0f}},	
+    {{1.0f, 0.0f, -1.0f},		{0.0f, 0.0f, 0.0f},		{0.0f, 1.0f, 0.0f},   {1.0f, 1.0f}},	
+    {{1.0f, 0.0f,  1.0f},		{0.0f, 0.0f, 0.0f},		{0.0f, 1.0f, 0.0f},   {1.0f, 0.0f}},
  };
 
 GLuint indices[] = {
@@ -30,16 +20,16 @@ GLuint indices[] = {
 	0, 2, 3
 };
 
-GLfloat lightVertices[] ={
+vertex_t lightVertices[] ={
    //     COORDINATES     //
-	-0.1f, -0.1f,  0.1f,
-	-0.1f, -0.1f, -0.1f,
-	 0.1f, -0.1f, -0.1f,
-	 0.1f, -0.1f,  0.1f,
-	-0.1f,  0.1f,  0.1f,
-	-0.1f,  0.1f, -0.1f,
-	 0.1f,  0.1f, -0.1f,
-	 0.1f,  0.1f,  0.1f
+	{{-0.1f, -0.1f,  0.1f}},
+	{{-0.1f, -0.1f, -0.1f}},
+	 {{0.1f, -0.1f, -0.1f}},
+	 {{0.1f, -0.1f,  0.1f}},
+	{{-0.1f,  0.1f,  0.1f}},
+	{{-0.1f,  0.1f, -0.1f}},
+	 {{0.1f,  0.1f, -0.1f}},
+	 {{0.1f,  0.1f,  0.1f}}
 };
 
 GLuint lightIndices[] ={
@@ -62,14 +52,14 @@ const int SCR_HEIGHT = 600;
 
 int main() {
   // Init the window
-  printf("Initializing rendering engine\n\n\n");
+  printf("Initializing rendering engine\n");
   glfwInit();
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
   GLFWwindow *window =
-      glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+      glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Rendering Engine", NULL, NULL);
   if (window == NULL) {
     printf("Failed to create GLFW window\n");
     glfwTerminate();
@@ -95,99 +85,59 @@ int main() {
     return -1;
   }
 
-  // Create a shader program
+  // FLOOR
   SHADER_ID shader = create_shader_program("shaders/default.vert", "shaders/default.frag");
 
-  // Create a VAO and bind it
-  VAO_ID VAO = create_VAO();
-  bind_VAO(&VAO);
+  texture_t texture = create_texture("resources/planks.png", "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE);
+  texture_t tex_spec = create_texture("resources/planksSpec.png", "specular", 1, GL_RED, GL_UNSIGNED_BYTE);
+  texture_t textures[] = {texture, tex_spec};
 
-  // Create VBO and EBO
-  VBO_ID VBO = create_VBO(vertices, sizeof(vertices));
-  EBO_ID EBO = create_EBO(indices, sizeof(indices));
+  mesh_t floor = create_mesh(vertices, sizeof(vertices)/sizeof(vertex_t), indices, sizeof(indices)/sizeof(GLuint), textures, sizeof(textures)/sizeof(texture_t));
 
-  // Link attributes
-  link_attrib(&VAO, &VBO, 0, 3, GL_FLOAT, 11 * sizeof(float), (void *)(0));
-  link_attrib(&VAO, &VBO, 1, 3, GL_FLOAT, 11 * sizeof(float), (void *)(3 * sizeof(float)));
-  link_attrib(&VAO, &VBO, 2, 2, GL_FLOAT, 11 * sizeof(float), (void *)(6 * sizeof(float)));
-  link_attrib(&VAO, &VBO, 3, 3, GL_FLOAT, 11 * sizeof(float), (void *)(8 * sizeof(float)));
-
-  // Make sure that everything is unbinded
-  unbind_VAO();
-  unbind_VBO();
-  unbind_EBO();
 
   SHADER_ID lightShader = create_shader_program("shaders/light.vert", "shaders/light.frag");
-  VAO_ID lightVAO = create_VAO();
-  bind_VAO(&lightVAO);
+  mesh_t light = create_mesh(lightVertices, sizeof(lightVertices)/sizeof(vertex_t), lightIndices, sizeof(lightIndices)/sizeof(GLuint), textures, sizeof(textures)/sizeof(texture_t));
 
-  VBO_ID lightVBO = create_VBO(lightVertices, sizeof(lightVertices));
-  EBO_ID lightEBO = create_EBO(lightIndices, sizeof(lightIndices));
-
-  link_attrib(&lightVAO, &lightVBO, 0, 3, GL_FLOAT, 3 * sizeof(float), (void *)(0));
-
-  unbind_VAO();
-  unbind_VBO();
-  unbind_EBO();
 
   vec4 lightColor = {1.0f, 1.0f, 1.0f, 1.0f};
-
-  vec3 lightPos = {0.0f, 1.5f, -1.5f};
+  vec3 lightPos = {0.0f, 2.0f, 0.0f};
   mat4 lightModel = GLM_MAT4_IDENTITY_INIT;
   glm_translate(lightModel, lightPos);
 
-  vec3 pyramidPos = {0.0f, 0.0f, -1.5f};
-  mat4 pyramidModel = GLM_MAT4_IDENTITY_INIT;
-  glm_translate(pyramidModel, pyramidPos);
+  vec3 objPos = {0.0f, 0.0f, 0.0f};
+  mat4 objModel = GLM_MAT4_IDENTITY_INIT;
+  glm_translate(objModel, objPos);
 
   activate_shader(&lightShader);
   glUniformMatrix4fv(glGetUniformLocation(lightShader, "model"), 1, GL_FALSE, (float *)lightModel);
   glUniform4f(glGetUniformLocation(lightShader, "lightColor"), lightColor[0], lightColor[1], lightColor[2], lightColor[3]);
   activate_shader(&shader);
-  glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_FALSE, (float *)pyramidModel);
+  glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_FALSE, (float *)objModel);
   glUniform4f(glGetUniformLocation(shader, "lightColor"), lightColor[0], lightColor[1], lightColor[2], lightColor[3]);
   glUniform3f(glGetUniformLocation(shader, "lightPos"), lightPos[0], lightPos[1], lightPos[2]);
-
-
-  // Texture
-
-  texture_t texture = create_texture("resources/planks.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
-  assign_texUnit(&shader, "tex0", 0);
 
   glEnable(GL_DEPTH_TEST);
   vec3 camPos = {0.0f, 0.0f, 1.0f};
   camera_t cam = create_camera(camPos, SCR_WIDTH, SCR_HEIGHT, 0.01f, 1.f);
 
+  printf("====================================RENDERING LOOP====================================\n");
   while (!glfwWindowShouldClose(window)) {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     inputs(window, &cam);
     update_camera_matrix(&cam, 45.0f, 0.1f, 100.0f);
 
-    activate_shader(&shader);
+    draw_mesh(&floor, shader, &cam);
 
-    glUniform3f(glGetUniformLocation(shader, "camPos"), cam.position[0], cam.position[1], cam.position[2]);
-
-    apply_camera_matrix(shader, "camMatrix", &(cam.matrix));
-
-    bind_texture(&texture);
-
-    bind_VAO(&VAO);
-    glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(typeof(indices[0])), GL_UNSIGNED_INT, 0);
     unbind_texture();
 
-    activate_shader(&lightShader);
-    apply_camera_matrix(lightShader, "camMatrix", &(cam.matrix));
-    bind_VAO(&lightVAO);
-    glDrawElements(GL_TRIANGLES, sizeof(lightIndices) / sizeof(typeof(lightIndices[0])), GL_UNSIGNED_INT, 0);
-    
+    draw_mesh(&light, lightShader, &cam);
+
     glfwSwapBuffers(window);
     glfwPollEvents();
   }
 
-  delete_VAO(&VAO);
-  delete_VBO(&VBO);
-  delete_EBO(&EBO);
+  delete_VAO(&floor.VAO);
   delete_shader(&shader);
   delete_texture(&texture);
   glfwTerminate();

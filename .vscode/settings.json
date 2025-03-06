@@ -1,5 +1,10 @@
 {
   "files.associations": {
-    "shader.h": "c"
+    "shader.h": "c",
+    "string": "cpp",
+    "vector": "cpp",
+    "vao.h": "c",
+    "time.h": "c",
+    "ebo.h": "c"
   }
 }

@@ -1,6 +1,8 @@
 #ifndef VAO_H
 #define VAO_H
 
+#include <glad/glad.h>
+
 #include "VBO.h"
 
 typedef GLuint VAO_ID;

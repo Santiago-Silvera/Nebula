@@ -1,6 +1,7 @@
 #ifndef EBO_H
 #define EBO_H
 
+#include <stdio.h>
 #include <glad/glad.h>
 typedef GLuint EBO_ID;
 

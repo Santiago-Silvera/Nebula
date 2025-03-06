@@ -2,6 +2,7 @@
 #define SHADER_H
 
 #include <glad/glad.h>
+#include <stb_image.h>
 
 #include <GLFW/glfw3.h>
 

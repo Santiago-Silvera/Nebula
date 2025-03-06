@@ -105,5 +105,8 @@ SHADER_ID create_shader_program(const char *vertexPath, const char *fragmentPath
   return shader_id;
 }
 
-void activate_shader(SHADER_ID *shader) { glUseProgram(*shader); }
+void activate_shader(SHADER_ID *shader) {
+    printf("Activating shader: %d\n", *shader);
+    glUseProgram(*shader); 
+}
 void delete_shader(SHADER_ID *shader) { glDeleteShader(*shader); }

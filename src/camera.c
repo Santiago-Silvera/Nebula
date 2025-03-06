@@ -30,20 +30,10 @@ void update_camera_matrix(camera_t *cam, float FOVdeg, float near_plane, float f
   vec3 target;
   glm_vec3_add(cam->position, cam->orientation, target);
 
-  // ---Debug------------------------
-  /*printf("Position: \n");*/
-  /*glm_vec3_print(cam->position, stdout);*/
-  /*printf("Orientation: \n");*/
-  /*glm_vec3_print(cam->orientation, stdout);*/
-  /*printf("Target: \n");*/
-  /*glm_vec3_print(target, stdout);*/
-  // --------------------------------
-
   glm_lookat(cam->position, target, cam->up, view);
   glm_perspective(glm_rad(FOVdeg), (float)cam->width / cam->height, near_plane, far_plane, projection);
 
   glm_mat4_mul(projection, view, cam->matrix);
-
 }
 
 void apply_camera_matrix(SHADER_ID shader, const char* uniform, mat4 *m) {
@@ -117,7 +107,7 @@ void inputs(GLFWwindow *window, camera_t *cam) {
 
   // Calculate mouse offset
   float offsetX = ((float)mouseX - centerX) * cam->sensitivity * 0.1f;
-  float offsetY = ((float)mouseY - centerY) * cam->sensitivity * 0.1f; // Inverted Y
+  float offsetY = ((float)mouseY - centerY) * cam->sensitivity * 0.1f;
 
   // Reset cursor to center
   glfwSetCursorPos(window, centerX, centerY);
@@ -131,11 +121,12 @@ void inputs(GLFWwindow *window, camera_t *cam) {
   vec3 newOrientation;
   glm_vec3_copy(cam->orientation, newOrientation);
   glm_vec3_rotate(newOrientation, glm_rad(-offsetX), cam->up);
-  vec3 down;
-  glm_vec3_negate_to(cam->up, down);
+
   if (abs(glm_vec3_angle(newOrientation, cam->up) - glm_rad(90.0f)) <= glm_rad(85.0f)) {
     glm_vec3_copy(newOrientation, cam->orientation);
   }
   glm_vec3_rotate(cam->orientation, glm_rad(-offsetY), right);
   glm_vec3_norm(cam->orientation);
+
+  // printf("Orientation: "); glm_vec3_print(cam->orientation, stdout);
 }

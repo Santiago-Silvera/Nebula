@@ -14,6 +14,7 @@ add_executable(render
     ${SRC_DIR}/texture.c
     ${SRC_DIR}/stb.c
     ${SRC_DIR}/camera.c
+    ${SRC_DIR}/mesh.c
 )
 
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)

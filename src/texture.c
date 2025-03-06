@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-texture_t create_texture(const char *image, GLenum textureType, GLenum slot, GLenum format, GLenum pixelType) {
+texture_t create_texture(const char *image, const char *textureType, GLenum slot, GLenum format, GLenum pixelType) {
   texture_t texture = {.type = textureType};
   int widthImg, heightImg, numColCh;
   // flip vertically
@@ -25,38 +25,44 @@ texture_t create_texture(const char *image, GLenum textureType, GLenum slot, GLe
   glActiveTexture(GL_TEXTURE0 + slot);
   texture.slot = slot;
 
-  glBindTexture(textureType, texture.textureID);
+  glBindTexture(GL_TEXTURE_2D, texture.textureID);
 
   // glTexParameteri(type of texture, setting to modify, value for setting);
-  glTexParameteri(textureType, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameteri(textureType, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
   // (r, s, t) another word for 3d axis. we dont change the R axis
-  glTexParameteri(textureType, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameteri(textureType, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-  glTexImage2D(textureType, 0, GL_RGBA, widthImg, heightImg, 0, format,
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, widthImg, heightImg, 0, format,
                pixelType, bytes);
   // Creates lower resolution versions of the texture
-  glGenerateMipmap(textureType);
+  glGenerateMipmap(GL_TEXTURE_2D);
 
   stbi_image_free(bytes);
-  glBindTexture(textureType, 0);
+  glBindTexture(GL_TEXTURE_2D, 0);
 
   return texture;
 }
 
 // Assigns a texture unit to a texture
 void assign_texUnit(SHADER_ID *shader, const char *uniform, GLuint texUnit) {
+  printf("Assigning texture unit %d to %s for shader %d\n", texUnit, uniform, *shader);
   GLuint tex0uniform = glGetUniformLocation(*shader, uniform);
   activate_shader(shader);
   glUniform1i(tex0uniform, texUnit);
 }
 void bind_texture(texture_t *texture) {
+  printf("Binding texture %d\n", texture->textureID);
   glActiveTexture(GL_TEXTURE0 + texture->slot);
   glBindTexture(GL_TEXTURE_2D, texture->textureID);
 }
-void unbind_texture(void) { glBindTexture(GL_TEXTURE_2D, 0); }
+void unbind_texture(void) { 
+  printf("Unbinding texture\n");
+  glBindTexture(GL_TEXTURE_2D, 0); 
+}
 void delete_texture(texture_t *texture) {
+  printf("Deleting texture %d\n", texture->textureID);
   glDeleteTextures(1, &(texture->textureID));
 }
