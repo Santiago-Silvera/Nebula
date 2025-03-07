@@ -1,26 +1,10 @@
 #include "mesh.h"
 #include <string.h>
 
-void print_vertex(const vertex_t *v) {
-    printf("Position:  [%f, %f, %f]\n", v->position[0], v->position[1], v->position[2]);
-    printf("Color:     [%f, %f, %f]\n", v->color[0], v->color[1], v->color[2]);
-    printf("Normal:    [%f, %f, %f]\n", v->normal[0], v->normal[1], v->normal[2]);
-    printf("TexCoord:  [%f, %f]\n", v->texCoord[0], v->texCoord[1]);
-    printf("---------------------------\n");
-}
-
-void print_vertices(const vertex_t *vertices, size_t count) {
-    for (size_t i = 0; i < count; i++) {
-        printf("Vertex %zu:\n", i);
-        print_vertex(&vertices[i]);
-    }
-}
-
 mesh_t create_mesh( vertex_t *vertices, int vertices_count, 
                     GLuint *indices, int indices_count, 
                     texture_t *textures, int textures_count) {
-        // print_vertices(vertices, vertices_count);
-        printf("Creating mesh\n");
+        NINFO("Creating mesh\n");
         mesh_t mesh = {
             .vertices = vertices,
             .vertices_count = vertices_count,
@@ -78,6 +62,6 @@ void draw_mesh(mesh_t *mesh, SHADER_ID shader, camera_t *camera) {
 	apply_camera_matrix(shader, "camMatrix", &(camera->matrix));
 
 	// Draw the actual mesh
-    printf("Drawing mesh\n");
+    NTRACE("Drawing mesh\n");
 	glDrawElements(GL_TRIANGLES, mesh->indices_count, GL_UNSIGNED_INT, 0);
 }

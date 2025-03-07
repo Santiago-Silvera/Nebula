@@ -1,26 +1,25 @@
 #include "shader.h"
-#include "stdio.h"
-#include "stdlib.h"
+
 
 // ChatGPT gave me this
 char *get_file_contents(const char *filename) {
-  printf("Opening file %s\n", filename);
+  NINFO("Opening file %s\n", filename);
   FILE *file = fopen(filename, "rb");  // Use binary mode for accuracy
   if (!file) {
-      perror("Failed to open file");
+      NERROR("Failed to open file");
       return NULL;
   }
 
   // Seek to the end to determine file size
   if (fseek(file, 0, SEEK_END) != 0) {
-      perror("fseek failed");
+      NERROR("fseek failed");
       fclose(file);
       return NULL;
   }
 
   long file_size = ftell(file);
   if (file_size < 0) {
-      perror("ftell failed");
+      NERROR("ftell failed");
       fclose(file);
       return NULL;
   }
@@ -30,7 +29,7 @@ char *get_file_contents(const char *filename) {
   // Allocate memory (+1 for null terminator)
   char *buffer = (char *)malloc(file_size + 1);
   if (!buffer) {
-      perror("Memory allocation failed");
+      NERROR("Memory allocation failed");
       fclose(file);
       return NULL;
   }
@@ -38,7 +37,7 @@ char *get_file_contents(const char *filename) {
   // Read file into buffer
   size_t bytes_read = fread(buffer, 1, file_size, file);
   if (bytes_read != file_size) {
-      perror("fread error");
+      NERROR("fread error");
       free(buffer);
       fclose(file);
       return NULL;
@@ -56,7 +55,7 @@ SHADER_ID create_shader_program(const char *vertexPath, const char *fragmentPath
   const char *fragmentSource = get_file_contents(fragmentPath);
 
   if (!vertexSource || !fragmentSource) {
-    printf("Failed to read shader source\n");
+    NERROR("Failed to read shader source\n");
     free((char *)vertexSource);
     free((char *)fragmentSource);
     return 0;
@@ -74,7 +73,7 @@ SHADER_ID create_shader_program(const char *vertexPath, const char *fragmentPath
   glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
   if (!success) {
       glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-      printf("Vertex Shader Compilation Failed: %s\nFor filename: %s\n", infoLog, vertexPath);
+      NERROR("Vertex Shader Compilation Failed: %s\nFor filename: %s\n", infoLog, vertexPath);
   }
 
   // The same goes for the fragment shader
@@ -85,7 +84,7 @@ SHADER_ID create_shader_program(const char *vertexPath, const char *fragmentPath
   glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
   if (!success) {
       glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-      printf("Fragment Shader Compilation Failed: %s\nFor filename: %s\n", infoLog, fragmentPath);
+      NERROR("Fragment Shader Compilation Failed: %s\nFor filename: %s\n", infoLog, fragmentPath);
   }
 
   // Shader program we will use in the rendering
@@ -106,7 +105,7 @@ SHADER_ID create_shader_program(const char *vertexPath, const char *fragmentPath
 }
 
 void activate_shader(SHADER_ID *shader) {
-    printf("Activating shader: %d\n", *shader);
+    NTRACE("Activating shader: %d\n", *shader);
     glUseProgram(*shader); 
 }
 void delete_shader(SHADER_ID *shader) { glDeleteShader(*shader); }

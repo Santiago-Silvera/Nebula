@@ -1,7 +1,10 @@
-#ifndef TEXTURE_H
-#define TEXTURE_H
+#pragma once
 
 #include "shader.h"
+#include <stb_image.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include "logger.h"
 
 
 typedef struct Texture {
@@ -16,5 +19,3 @@ void assign_texUnit(SHADER_ID *shader, const char *uniform, GLuint texUnit);
 void bind_texture(texture_t *texture);
 void unbind_texture(void);
 void delete_texture(texture_t *texture);
-
-#endif

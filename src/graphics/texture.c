@@ -1,8 +1,5 @@
 #include "texture.h"
-#include "shader.h"
-#include <stb_image.h>
-#include <stdbool.h>
-#include <stdio.h>
+
 
 texture_t create_texture(const char *image, const char *textureType, GLenum slot, GLenum format, GLenum pixelType) {
   texture_t texture = {.type = textureType};
@@ -11,10 +8,10 @@ texture_t create_texture(const char *image, const char *textureType, GLenum slot
   stbi_set_flip_vertically_on_load(true);
   unsigned char *bytes = stbi_load(image, &widthImg, &heightImg, &numColCh, 0);
   if (!bytes) {
-    perror("Failed to load texture\n");
+    NERROR("Failed to load texture\n");
   }
   if (stbi_failure_reason()) {
-    printf("%s\n", stbi_failure_reason());
+    NERROR("%s\n", stbi_failure_reason());
   }
 
   glGenTextures(1, &texture.textureID);
@@ -48,21 +45,21 @@ texture_t create_texture(const char *image, const char *textureType, GLenum slot
 
 // Assigns a texture unit to a texture
 void assign_texUnit(SHADER_ID *shader, const char *uniform, GLuint texUnit) {
-  printf("Assigning texture unit %d to %s for shader %d\n", texUnit, uniform, *shader);
+  NTRACE("Assigning texture unit %d to %s for shader %d\n", texUnit, uniform, *shader);
   GLuint tex0uniform = glGetUniformLocation(*shader, uniform);
   activate_shader(shader);
   glUniform1i(tex0uniform, texUnit);
 }
 void bind_texture(texture_t *texture) {
-  printf("Binding texture %d\n", texture->textureID);
+  NTRACE("Binding texture %d\n", texture->textureID);
   glActiveTexture(GL_TEXTURE0 + texture->slot);
   glBindTexture(GL_TEXTURE_2D, texture->textureID);
 }
 void unbind_texture(void) { 
-  printf("Unbinding texture\n");
+  NTRACE("Unbinding texture\n");
   glBindTexture(GL_TEXTURE_2D, 0); 
 }
 void delete_texture(texture_t *texture) {
-  printf("Deleting texture %d\n", texture->textureID);
+  NTRACE("Deleting texture %d\n", texture->textureID);
   glDeleteTextures(1, &(texture->textureID));
 }

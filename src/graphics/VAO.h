@@ -1,9 +1,9 @@
-#ifndef VAO_H
-#define VAO_H
+#pragma once
 
 #include <glad/glad.h>
 
 #include "VBO.h"
+#include "logger.h"
 
 typedef GLuint VAO_ID;
 
@@ -13,5 +13,3 @@ void link_attrib(VAO_ID *VAO, VBO_ID *VBO, GLuint layout, GLuint numComponents,
 void bind_VAO(VAO_ID *VAO);
 void unbind_VAO(void);
 void delete_VAO(VAO_ID *VAO);
-
-#endif // !VAO_H

@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <cglm/cglm.h>
-#include <time.h>
 
 #include "mesh.h"
+#include "logger.h"
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void error_callback(int error, const char *desc);
@@ -51,20 +51,22 @@ const int SCR_WIDTH = 800;
 const int SCR_HEIGHT = 600;
 
 int main() {
+
   // Init the window
-  printf("Initializing rendering engine\n");
+  NINFO("Initializing rendering engine\n");
   glfwInit();
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
   GLFWwindow *window =
-      glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Rendering Engine", NULL, NULL);
+      glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "NEBULA Engine", NULL, NULL);
   if (window == NULL) {
-    printf("Failed to create GLFW window\n");
+    NFATAL("Failed to create GLFW window\n");
     glfwTerminate();
     return -1;
   }
+
 
   glfwMakeContextCurrent(window);
   glfwFocusWindow(window);
@@ -75,13 +77,13 @@ int main() {
   // Check if GLFW_CURSOR_DISABLED is properly set
   int mode = glfwGetInputMode(window, GLFW_CURSOR);
   if (mode == GLFW_CURSOR_DISABLED) {
-    printf("GLFW_CURSOR_DISABLED successfully set.\n");
+    NINFO("GLFW_CURSOR_DISABLED successfully set.\n");
   } else {
-    printf("Failed to set GLFW_CURSOR_DISABLED, current mode: %d\n", mode);
+    NERROR("Failed to set GLFW_CURSOR_DISABLED, current mode: %d\n", mode);
   }
 
   if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-    printf("Failed to initialize GLAD\n");
+    NFATAL("Failed to initialize GLAD\n");
     return -1;
   }
 
@@ -120,7 +122,7 @@ int main() {
   vec3 camPos = {0.0f, 0.0f, 1.0f};
   camera_t cam = create_camera(camPos, SCR_WIDTH, SCR_HEIGHT, 0.01f, 1.f);
 
-  printf("====================================RENDERING LOOP====================================\n");
+  NINFO("====================================RENDERING LOOP====================================\n");
   while (!glfwWindowShouldClose(window)) {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -149,5 +151,5 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
   glViewport(0, 0, width, height);
 }
 void error_callback(int error, const char *desc) {
-  fprintf(stderr, "GLFW Error (%d): %s\n", error, desc);
+  NERROR("GLFW Error (%d): %s\n", error, desc);
 }

@@ -5,6 +5,10 @@
     "vector": "cpp",
     "vao.h": "c",
     "time.h": "c",
-    "ebo.h": "c"
+    "ebo.h": "c",
+    "mesh.h": "c",
+    "texture.h": "c",
+    "vbo.h": "c",
+    "logger.h": "c"
   }
 }
