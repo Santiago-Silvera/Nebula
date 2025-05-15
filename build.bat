@@ -1,7 +1,7 @@
 @echo off
 
 :: Create build directory and run cmake to generate the Visual Studio solution
-cmake -G "MinGW Makefiles" -S . -B build
+cmake -G "MinGW Makefiles" -S . -B build -DCMAKE_BUILD_TYPE=Debug
 
 :: Change to build directory
 cd build
@@ -16,4 +16,3 @@ cd ..
 .\build\render.exe
 
 pause
-

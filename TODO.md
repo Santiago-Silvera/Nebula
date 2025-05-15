@@ -22,9 +22,22 @@ This is an estimation of the features for each release version of the engine. Sp
 
 ## Release 0.2.0
 
+- [ ] Transition from OpenGL to Vulkan
+  - [ ] Setup
+    - [X] Base code
+    - [X] Instance
+    - [X] Validation Layers
+    - [ ] Physical devices and queue families
+    - [ ] Logical devices and queues
+  - [ ] Presentation
+    - [ ] Window Surface
+    - [ ] Swap chain
+    - [ ] Image views
+
+## Release 0.2.1
+
 - [ ] Shader
   - [ ] Shader hot-reloading
-- [ ] Transition from OpenGL to Vulkan (?)
 - [ ] API
   - [ ] Init functions
   - [ ] Drawing functions

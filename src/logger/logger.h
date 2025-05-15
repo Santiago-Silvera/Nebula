@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/defines.h"
+#include "types.h"
 
 #define MIN_LOG_LEVEL 2
 
@@ -14,12 +14,16 @@ typedef enum LOG_LEVEL {
 } log_level;
 
 
+static const char *level_strings[6] = {"[TRACE]: ", "[DEBUG]: ", "[INFO]: ", "[WARNING]: ", "[ERROR]: ", "[FATAL]: "};
+
 b8 init_logger(void);
+
 void end_logger(void);
 
 // All logging functions converge in log_output
 void log_output(log_level level, const char *message, ...);
 
+#define NVKLOG(severity, message, ...) log_output(severity, message, ##__VA_ARGS__);
 
 #define NFATAL(message, ...) log_output(LOG_FATAL, message, ##__VA_ARGS__);
 

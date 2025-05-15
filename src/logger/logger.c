@@ -7,6 +7,7 @@
 
 b8 init_logger(void) {
     // TODO: create log file
+    log_output(LOG_INFO, "Logger initialized with MIN_LOG_LEVEL: %d", MIN_LOG_LEVEL);
     return true;
 }
 void end_logger(void) {
@@ -14,7 +15,6 @@ void end_logger(void) {
 }
 
 void log_output(log_level level, const char *message, ...) {
-    const char *level_strings[6] = {"[TRACE]: ", "[DEBUG]: ", "[INFO]: ", "[WARNING]: ", "[ERROR]: ", "[FATAL]: "};
     b8 is_error = level >= LOG_ERROR;
     char out_message[32000];
     memset(out_message, 0, 32000);
