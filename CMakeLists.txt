@@ -1,49 +1,95 @@
 cmake_minimum_required(VERSION 3.28)
 project(RenderingEngine C)
 
+# -----------------------------
+# 1) Opciones generales
+# -----------------------------
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
-set(SRC_DIR ${PROJECT_SOURCE_DIR}/src)
-
 add_compile_definitions(DEBUG)
 
-add_executable(render
-    ${SRC_DIR}/main.c
-    ${SRC_DIR}/logger/logger.c
-    ${SRC_DIR}/graphics/shader.c
-    ${SRC_DIR}/graphics/VAO.c
-    ${SRC_DIR}/graphics/VBO.c
-    ${SRC_DIR}/graphics/EBO.c
-    ${SRC_DIR}/graphics/texture.c
-    ${SRC_DIR}/graphics/stb.c
-    ${SRC_DIR}/graphics/camera.c
-    ${SRC_DIR}/graphics/mesh.c
-    ${SRC_DIR}/vk_backend/vk_core.c
-    ${SRC_DIR}/vk_backend/vk_instance.c
-    ${SRC_DIR}/vk_backend/vk_debug.c
-    ${SRC_DIR}/vk_backend/vk_device.c
-    ${SRC_DIR}/window/window.c
-    ${SRC_DIR}/core/global.c
+# Forzar C11
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+
+# -----------------------------
+# 2) Definir ruta raíz de fuentes
+# -----------------------------
+set(SRC_DIR ${PROJECT_SOURCE_DIR}/src)
+
+# -----------------------------
+# 3) Obtener lista de fuentes
+# -----------------------------
+file(GLOB_RECURSE ENGINE_SOURCES
+    "${SRC_DIR}/*.c"
 )
 
+set(SOURCES ${ENGINE_SOURCES})
+
+list(FILTER SOURCES EXCLUDE REGEX ".*/\\.ccls-cache/.*")
+
+message(STATUS "SOURCES: ${SOURCES}")
+# -----------------------------
+# 4) Crear ejecutable
+# -----------------------------
+add_executable(render ${SOURCES})
+
+
+
+# -----------------------------
+# 5) Vulkan
+# -----------------------------
 find_package(Vulkan REQUIRED)
 
-set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+# -----------------------------
+# 6) GLFW 
+# -----------------------------
+find_package(glfw3 3.3 REQUIRED)
 
-add_subdirectory(external/glfw EXCLUDE_FROM_ALL)
-
-add_subdirectory(external/glad EXCLUDE_FROM_ALL)
-
+# -----------------------------
+# 7) CGLM 
+# -----------------------------
 add_subdirectory(external/cglm EXCLUDE_FROM_ALL)
 
-target_link_libraries(render PRIVATE glfw glad cglm_headers Vulkan::Vulkan)
+# -----------------------------
+# 8) GLAD
+# -----------------------------
+add_subdirectory(external/glad EXCLUDE_FROM_ALL)
 
-target_include_directories(render PUBLIC "${PROJECT_SOURCE_DIR}/external/stb")
-target_include_directories(render PUBLIC    "${SRC_DIR}" 
-                                            "${SRC_DIR}/core"
-                                            "${SRC_DIR}/logger" 
-                                            "${SRC_DIR}/graphics" 
-                                            "${SRC_DIR}/window" 
-                                            "${SRC_DIR}/vk_backend")
+# -----------------------------
+# 9) STB
+# -----------------------------
+set(STB_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/external/stb)
+
+# -----------------------------
+# 10) Rutas de inclusión del ejecutable
+# -----------------------------
+target_include_directories(render
+    PUBLIC
+        # Carpeta STB (stb_image.h, etc.)
+        ${STB_INCLUDE_DIR}
+
+        # Carpeta raíz de nuestros headers
+        ${SRC_DIR}
+        ${SRC_DIR}/core
+        ${SRC_DIR}/logger
+        ${SRC_DIR}/graphics
+        ${SRC_DIR}/window
+        ${SRC_DIR}/vk_backend
+)
+
+# -----------------------------
+# 11) Enlazar librerías
+# -----------------------------
+target_link_libraries(render
+    PRIVATE
+        glfw
+	m
+	glad
+        cglm
+        Vulkan::Vulkan
+)
+
+# -----------------------------
+# 12) Opciones adicionales (opcional)
+# -----------------------------
+# target_compile_options(render PRIVATE -Wall -Wextra -Wpedantic)

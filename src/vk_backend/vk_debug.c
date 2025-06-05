@@ -5,8 +5,10 @@
 
 // TODO: This can be done in more ways. For now, we just print the message to the console.
 
-VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, 
-    const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger);
+VkResult CreateDebugUtilsMessengerEXT(	VkInstance instance, 
+					const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, 
+					const VkAllocationCallbacks* pAllocator, 
+					VkDebugUtilsMessengerEXT* pDebugMessenger);
 
 void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator);
 
@@ -17,7 +19,7 @@ void setupDebugMessenger(VkInstance vk_instance, VkDebugUtilsMessengerEXT* vk_de
     VkDebugUtilsMessengerCreateInfoEXT createInfo = {VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT};
     populateDebugMessengerCreateInfo(&createInfo);
 
-    if (CreateDebugUtilsMessengerEXT(vk_instance, &createInfo, NULL, &vk_debug_messenger) != VK_SUCCESS) {
+    if (CreateDebugUtilsMessengerEXT(vk_instance, &createInfo, NULL, vk_debug_messenger) != VK_SUCCESS) {
         NFATAL("Failed to set up debug messenger.\n")
         exit(EXIT_FAILURE);
     }
