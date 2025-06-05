@@ -24,6 +24,18 @@ void log_output(log_level level, const char *message, ...) {
     vsnprintf(out_message, 32000, message, arg_ptr);
     va_end(arg_ptr);
 
-    // TODO: write to log file
-    printf("%s%s\n", level_strings[level], out_message);
+    const char* color;
+    switch (level) {
+        case LOG_TRACE:   color = ANSI_COLOR_TRACE; break;
+        case LOG_DEBUG:   color = ANSI_COLOR_DEBUG; break;
+        case LOG_INFO:    color = ANSI_COLOR_INFO;  break;
+        case LOG_WARNING: color = ANSI_COLOR_WARN;  break;
+        case LOG_ERROR:   color = ANSI_COLOR_ERROR; break;
+        case LOG_FATAL:   color = ANSI_COLOR_FATAL; break;
+        default:          color = ANSI_COLOR_RESET; break;
+    }
+
+    printf("%s%s%s%s\n", color, level_strings[level], out_message, ANSI_COLOR_RESET);
+
+    // TODO: also write non-colored version to log file
 }

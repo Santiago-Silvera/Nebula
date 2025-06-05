@@ -36,6 +36,7 @@ export CC CXX
 echo_step "Instalando paquetes de Arch Linux requeridos..."
 sudo pacman -Sy --needed \
     vulkan-headers \
+    vulkan-validation-layers \
     vulkan-icd-loader \
     vulkan-tools \
     xorgproto \

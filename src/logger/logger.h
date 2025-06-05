@@ -2,6 +2,14 @@
 
 #include "types.h"
 
+#define ANSI_COLOR_RESET   "\x1b[0m"
+#define ANSI_COLOR_TRACE   "\x1b[90m" // Bright Black
+#define ANSI_COLOR_DEBUG   "\x1b[36m" // Cyan
+#define ANSI_COLOR_INFO    "\x1b[32m" // Green
+#define ANSI_COLOR_WARN    "\x1b[33m" // Yellow
+#define ANSI_COLOR_ERROR   "\x1b[31m" // Red
+#define ANSI_COLOR_FATAL   "\x1b[35m" // Magenta
+
 #define MIN_LOG_LEVEL 2
 
 typedef enum LOG_LEVEL {
