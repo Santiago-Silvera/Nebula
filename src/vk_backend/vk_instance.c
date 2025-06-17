@@ -49,9 +49,11 @@ VkInstance create_vulkan_instance(const char **validationLayers, u32 validationL
 
     if (vkCreateInstance(&createInfo, NULL, &instance) != VK_SUCCESS) {
         NFATAL("Failed to create Vulkan instance.\n")
+        free(extensions);
         exit(EXIT_FAILURE);
     }
 
+    free(extensions);
     return instance;
 }
 
