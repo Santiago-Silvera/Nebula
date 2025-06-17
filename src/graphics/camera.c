@@ -3,6 +3,7 @@
 #include "cglm/affine-pre.h"
 #include "cglm/io.h"
 #include "cglm/vec3.h"
+#include <math.h>
 
 camera_t create_camera(vec3 position, int width, int height, float speed, float sensitivity) {
   vec3 final_position;
@@ -122,7 +123,7 @@ void inputs(GLFWwindow *window, camera_t *cam) {
   glm_vec3_copy(cam->orientation, newOrientation);
   glm_vec3_rotate(newOrientation, glm_rad(-offsetX), cam->up);
 
-  if (abs(glm_vec3_angle(newOrientation, cam->up) - glm_rad(90.0f)) <= glm_rad(85.0f)) {
+  if (fabsf(glm_vec3_angle(newOrientation, cam->up) - glm_rad(90.0f)) <= glm_rad(85.0f)) {
     glm_vec3_copy(newOrientation, cam->orientation);
   }
   glm_vec3_rotate(cam->orientation, glm_rad(-offsetY), right);
